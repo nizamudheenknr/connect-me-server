@@ -23,5 +23,5 @@ export const create_admin = async (req, res) => {
   await newAdmin.save();
   return res
     .status(201)
-    .json({ message: "Admin created succussfully", Admin: newAdmin });
+    .json({ message:"Admin created succussfully", Admin: newAdmin });
 };
