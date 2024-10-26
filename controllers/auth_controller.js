@@ -1,4 +1,4 @@
-import { decrypt } from "dotenv"
+
 import bcrypt from 'bcryptjs'
 import { Admin } from "../model/admin.js"
 
