@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors"; 
 import adminRoute from './routes/admin_route.js';
+import userRoute from './routes/user_route.js'
 import authRoute from './routes/auth_routes.js';
 
 dotenv.config();
@@ -19,13 +20,14 @@ mongoose.connect(process.env.DB, { dbName: "social-media" })
 
 // Routes
 app.use("/api/admin", adminRoute);
+app.use('/api/users', userRoute);
 app.use("/api", authRoute);
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Internal Server Error", error: err.message });
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ message: "Internal Server Error", error: err.message });
+// });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

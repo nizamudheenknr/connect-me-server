@@ -1,105 +1,73 @@
 import mongoose from "mongoose";
-
+import Post from './post.js'
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    profileImage: {
-      type: String,
-      default: "", // URL for profile picture
-    },
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    username: {
+       type: String,
+        required: true 
+        
       },
-    ],
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    email: { 
+      type: String,
+       required: true,
+        unique: true 
       },
-    ],
-    posts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Post",
-      },
-    ],
-    likedPosts: [
+    password: { 
+      type: String, 
+      required: true
+     },
+     role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user' 
+   },
+    profileImage: { 
+      type: String, 
+      default: "" 
+    },
+    followers: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User" 
+    }],
+    following: [{
+       type: mongoose.Schema.Types.ObjectId,
+        ref: "User" 
+      }],
+    posts:[
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post",
       },
     ],
-    chats: [
-      {
-        friendId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        messages: [
-          {
-            sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            text: String,
-            timestamp: {
-              type: Date,
-              default: Date.now,
-            },
-          },
-        ],
+      
+
+    likedPosts: [{
+       type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+       }],
+    isDeleted: { 
+        type: Boolean, 
+        default: false 
       },
-    ],
-    videoCalls: [
-      {
-        friendId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        callTimestamp: {
-          type: Date,
-          default: Date.now,
-        },
-        callDuration: Number, // Duration in seconds
-      },
-    ],
-    searchHistory: [
-      {
-        query: String,
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
-    mentions: [
-      {
-        postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
-    tags: [
-      {
-        postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
-    sharedPosts: [
-      {
-        postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
-        timestamp: { type: Date, default: Date.now },
-      },
-    ],
     createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+       type: Date,
+       default: Date.now 
+      }, 
+      is_active:{
+        type:Boolean,
+        default:true
+      }, 
+      isBlocked: {
+         type: Boolean, 
+         default: false
+         },
+         friends: {
+          type: [String], 
+          default: [],
+        }
   },
   { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);
-
 export default User;
