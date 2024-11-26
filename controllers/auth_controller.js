@@ -4,6 +4,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 // import { Admin } from "../model/admin.js";
+import { OAuth2Client } from "google-auth-library";
+
 
 import User from "../model/User.js";
 import Admin from "../model/Admin.js";
@@ -65,6 +67,40 @@ export const login = async (req, res) => {
   return res.status(404).json({ message: "User or Admin not found" });
 };
 
+
+
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = async (req, res) => {
+  const { token } = req.body;
+
+
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+
+  const { email, name } = ticket.getPayload();
+
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = new User({ email, username: name, role: "user" });
+    await user.save();
+  }
+
+ 
+  const jwtToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+
+  res.status(200).json({
+    token: jwtToken,
+    role: user.role,
+    user,
+  });
+};
 
 
   
